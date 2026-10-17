@@ -1,0 +1,9 @@
+Copied unchanged from HF_multichannel_RX/Vivado/projects/ip_ft8_virtual_rf/rtl (sine_lut.mem from ip_sine_dds/rtl), 2026-10-12.
+
+36fe6d182d3d2f049fcd154f9e89f005b73e8068d94067607cfe7740e6250eb0  ft8_virtual_rf_core.sv
+979b3d01c54b404b5cf46239b43d846c98029504ad314215a6e23b068f6afb6f  ad9248_emulator.sv
+3e19946a85115a9084c21bc820a361a25e8e3c7a653931e4b53aa9d31a3aedcc  ad9248_clock_gen.sv
+a13675f37e879e17b53d70222445fc46b63ddefbc1f4b0e2b9c0116dbf4f8d77  adc_input.sv
+2e5d3da27bf9af294f1cfad40a6af071c9aa14a861eb077a545a60bc53979dc3  sine_lut.mem
+
+Compatibility edit: ad9248_clock_gen.sv changes always_ff to always to allow the existing initial assignments in XSim 2026.1. Source checksums above identify original inputs.

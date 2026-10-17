@@ -1,0 +1,36 @@
+Xillinux  demo bundle 使用说明
+==================
+
+Xillinux 是一个完整的图形化的、基于 Lubuntu 16.04 的 Linux 发行版，可用于 Zynq7000 等设备。
+
+本示例压缩包中的Vivado 项目仅支持Smart Zynq SP2 V1.3版的主板。
+
+
+bitstream 文件生成向导
+-----------------------
+1. 解压缩本示例压缩包（如果您能阅读到本TXT文档，说明您已经完成了此步骤，此外解压缩的路径不能带有中文字符）
+
+2. 启动Vivado。请确保所使用的vivado版本是 2018.3 或以上 。 
+
+3. 打开 Vivado后 , 从上方菜单栏中选择 Tools > Run Tcl Script... 。在弹出的窗口中选择项目路径中的 verilog文件夹下的xillydemo-vivado.tcl 文件。系统将会自动加载tcl，并创建一个新的 Vivado工程，该工程包含生成bitstream所需的源文件以及各种设置。
+
+4. 当Vivado窗口底部的“Tcl Console”状态栏中出现 INFO: Project created: xillydemo， 代表工程已经创建成功。
+
+5. 之后单击左下角的“Generate Bitstream”来对工程进行编译综合并最终生成bitstream文件。 这个过程将持续几分钟。正常情况下不应该出现任何错误或严重的警告（Critical Warnings）。
+
+6. 在此过程结束后，您可以在verilog/vivado/xillydemo.runs/impl_1/xillydemo.bit 路径下找到新生成的bitstream文件。
+
+7. 请将刚刚生成的xillydemo.bit文件复制到 TF卡的第一个分区中（假设本步骤之前TF卡已经做好了镜像烧录等准备工作了）。除了 xillydemo.bit之外，还需要将bootfiles 目录下的 devicetree.dtb 和 boot.bin 两个文件一同复制到TF卡的第一个分区中。
+
+备注：bootfiles目录下也包含了预先编译综合后过的xillydemo.bit 文件，以方便对vivado开发流程还不太熟悉的人可以快速体验Xillinux。
+
+有关如何准备TF卡的更详细说明以及大量其他信息，请访问此网页：
+
+http://www.hellofpga.com/index.php/2023/10/12/xillinux/
+
+
+其他信息来源
+----------
+1. Xillinux的官方主页： https://xillybus.com/xillinux
+2. 入门指南（中文）： https://xillybus.com/downloads/doc/zh/xillybus_getting_started_zynq_zh.pdf
+3. Xillybus的文档页面（所有指南都有中文翻译）： https://xillybus.com/doc
