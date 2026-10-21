@@ -2,11 +2,12 @@
 module tb_selectable_adc;
 reg clk=0,busclk=0,adcclk=0,opened=0,rden=0,source_external=0;
 wire empty,eof,active_external;wire[31:0]data;
-reg signed[13:0] physical_data=-4000;
+reg signed[13:0] physical_sample=-4000;
+wire [13:0] physical_data=physical_sample ^ 14'h2000;
 always #3.90625 clk=~clk;
 always #5 busclk=~busclk;
 always #62.5 adcclk=~adcclk;
-always @(posedge adcclk) physical_data <= #7 physical_data+1;
+always @(posedge adcclk) physical_sample <= #7 physical_sample+1;
 selectable_adc_snapshot #(.AW(8)) dut(.clk128(clk),.clk_adc(adcclk),.bus_clk(busclk),
  .locked(1'b1),.stream_open(opened),.rden(rden),.source_external(source_external),
  .adc_data(physical_data),.adc_otra(1'b0),.active_external(active_external),

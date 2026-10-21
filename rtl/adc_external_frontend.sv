@@ -1,4 +1,5 @@
 // Channel-A only: capture on the falling edge of its 8 MHz forwarded clock.
+// The fixed ADC board emits offset binary: flip D13 before sign extension.
 // Samples remain stable across the bundled-data CDC until the next ADC period.
 module adc_external_frontend(
  input wire clk_adc, clk128, locked,
@@ -13,7 +14,7 @@ module adc_external_frontend(
  reg toggle=0;
  always @(negedge clk_adc) begin
   if(!locked) begin held_data<=0;held_overflow<=0;toggle<=0;end
-  else begin held_data<=adc_data;held_overflow<=adc_otra;toggle<=~toggle;end
+  else begin held_data<={~adc_data[13],adc_data[12:0]};held_overflow<=adc_otra;toggle<=~toggle;end
  end
  (* ASYNC_REG="TRUE" *) reg toggle_meta=0,toggle_sync=0;
  reg toggle_seen=0;

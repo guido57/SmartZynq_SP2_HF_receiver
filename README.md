@@ -1,31 +1,46 @@
-# SmartZynq SP2 Xillinux reference rebuild
+# SmartZynq SP2 HF receiver
 
-Separate repository for rebuilding the unchanged HelloFPGA SP2 hardware V1.3 reference before adding custom logic. The supplied reference works on the user's V1.3B board; the rebuilt design still requires hardware validation.
+This repository contains three independent Vivado projects for the HelloFPGA SmartZynq SP2 V1.3B (XC7Z020) running Xillinux 2.0. They retain the vendor Xillinux platform: HDMI display, Ethernet, SSH and Xillybus continue to be provided by the original PS/PL design.
 
-Source: http://www.hellofpga.com/wp-content/uploads/2023/10/xillinux-eval-SmartZynq-SP2-1.0b-hw1.3.zip
-Instructions: http://www.hellofpga.com/index.php/2023/10/17/xillinux-demo-bundle/
+| Project | Purpose |
+| --- | --- |
+| [`board_test`](vivado/projects/board_test/) | Minimal vendor-compatible board and Xillinux test. |
+| [`adc_simulator`](vivado/projects/adc_simulator/) | Simulated or external AD9248 capture path. |
+| [`hf_ssb_receiver`](vivado/projects/hf_ssb_receiver/) | 64 MS/s DDC, sharp channel filter, USB/LSB demodulation, PCM audio and PS-controlled FT8 simulator. |
 
-The original bundle is preserved under vendor/. Its prebuilt bitstream was generated with Vivado 2018.3 on 2024-09-06. No HDL or pin mapping changes are intended. Vendor files include third-party cores; this repository is local and has not been published. Upstream licensing applies.
+Each project has its own `create_project.tcl`, `open_block_design.tcl`, and `build.tcl`. Generated Vivado projects live below that project's `project/` directory and are ignored by Git.
 
-## Build with Vivado 2026.1
-
-From this repository:
+## HF receiver quick start
 
 ```bash
 source /tools/AMDDesignTools2026.1/2026.1/Vivado/settings64.sh
-vivado -mode batch -source scripts/build.tcl
+vivado -mode batch -source vivado/projects/hf_ssb_receiver/build.tcl
+python3 scripts/shorten_bit_header.py \
+  vivado/projects/hf_ssb_receiver/project/verilog/vivado/xillydemo.runs/impl_1/xillydemo.bit \
+  build/hf_ssb_receiver-legacy.bit
+python3 scripts/deploy_sd.py 192.168.1.126 build/hf_ssb_receiver-legacy.bit
+ssh root@192.168.1.126 reboot
 ```
 
-The build copies the vendor bundle into build/reference, then invokes its project-generation script. The upstream script upgrades IP and may modify the block design in that working copy. Use a fresh build directory for a repeat build.
+After boot, copy the receiver utilities once:
 
-Output: build/reference/verilog/vivado/xillydemo.runs/impl_1/xillydemo.bit
+```bash
+scp scripts/{adc_monitor.py,receiver_control.py,capture_ssb_audio.py,ft8_control.py} root@192.168.1.126:/root/
+```
 
-## Open in the Vivado GUI
+Configure simulated USB reception and listen on the Ubuntu PC:
 
-For a fresh GUI project, choose Tools > Run Tcl Script and select scripts/create_project.tcl. If a build already exists, open build/reference/verilog/vivado/xillydemo.xpr instead.
+```bash
+ssh root@192.168.1.126 'python3 /root/receiver_control.py --source simulated --mode usb --tune 1000000 --sim-frequency 1001000'
+ssh -T root@192.168.1.126 'cat /dev/xillybus_read_8' | aplay -t raw -f S16_LE -c 1 -r 8000
+```
 
-## Test on the SD card
+## Documentation
 
-Back up the working SD-card xillydemo.bit on the host. Replace only the SD boot partition's xillydemo.bit with the rebuilt file; retain boot.bin, devicetree.dtb and uImage. Safely eject, select SD boot and power-cycle. Check HDMI, Ethernet, SSH, LED2 control and both Xillybus loopbacks. Do not program QSPI for this test. If boot fails, restore the original prebuilt bitstream.
+- [Receiver operation and FT8 simulator](docs/receiver.md)
+- [Build, SD deployment and JTAG programming](docs/deployment.md)
+- [Design and verification notes](docs/development.md)
+- [JTAG reconfiguration lifecycle](docs/jtag-reconfiguration.md)
+- [Project map](vivado/projects/README.md)
 
-A rebuild need not match the original bytes. Build success alone does not establish hardware compatibility. See BUILD_STATUS.md for actual validation.
+Earlier experimental projects, intermediate build notes and superseded guides are retained under [`archive/docs/`](archive/docs/). They are historical reference material, not instructions for the current three supported projects.

@@ -2,3 +2,11 @@ build/
 .Xil/
 *.jou
 *.log
+*.backup.jou
+*.backup.log
+*.str
+*.pb
+nlviewcommon.logfile
+vivado/projects/*/project/
+archive/vivado_intermediate/
+scripts/__pycache__/
