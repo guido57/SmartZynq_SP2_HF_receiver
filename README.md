@@ -1,5 +1,7 @@
 # SmartZynq SP2 HF receiver
 
+![SmartZynq SP2 HF receiver](docs/images/hero.png)
+
 This repository contains three independent Vivado projects for the HelloFPGA SmartZynq SP2 V1.3B (XC7Z020) running Xillinux 2.0. They retain the vendor Xillinux platform: HDMI display, Ethernet, SSH and Xillybus continue to be provided by the original PS/PL design.
 
 ## Hardware
@@ -17,6 +19,10 @@ anti-alias filtering. The PL turns one digitized RF or IF stream into a tuned
 complex channel today; the longer-term architecture is to create several
 independent receive slices from that same sampled input.
 
+![SmartZynq SP2 and AD9248 acquisition board](docs/images/two-board-setup.png)
+
+The individual boards are also documented here: [SmartZynq SP2](docs/images/smartzynq-sp2.png) and [AD9248 ADC board](docs/images/ad9248-board.png).
+
 | Project | Purpose |
 | --- | --- |
 | [`board_test`](vivado/projects/board_test/) | Minimal vendor-compatible board and Xillinux test. |
@@ -24,6 +30,17 @@ independent receive slices from that same sampled input.
 | [`hf_ssb_receiver`](vivado/projects/hf_ssb_receiver/) | 64 MS/s DDC, sharp channel filter, USB/LSB demodulation, PCM audio and PS-controlled FT8 simulator. |
 
 Each project has its own `create_project.tcl`, `open_block_design.tcl`, and `build.tcl`. Generated Vivado projects live below that project's `project/` directory and are ignored by Git.
+
+## Receiver architecture
+
+The present implementation is one receiver channel; it is the practical
+foundation for the future multi-channel receiver. The FPGA handles the
+high-rate conversion work, while Xillinux configures the receiver, presents
+the local monitor, and provides audio/IQ data over Ethernet.
+
+![Receiver signal path](docs/images/block-diagram.png)
+
+![Future multi-channel monitoring concept](docs/images/multichannel-monitoring.png)
 
 ## HF receiver quick start
 
