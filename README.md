@@ -1,7 +1,5 @@
 # SmartZynq SP2 HF receiver
 
-![SmartZynq SP2 HF receiver](docs/images/hero.png)
-
 This repository contains three independent Vivado projects for the HelloFPGA SmartZynq SP2 V1.3B (XC7Z020) running Xillinux 2.0. They retain the vendor Xillinux platform: HDMI display, Ethernet, SSH and Xillybus continue to be provided by the original PS/PL design.
 
 ## Hardware
