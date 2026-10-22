@@ -19,7 +19,7 @@ anti-alias filtering. The PL turns one digitized RF or IF stream into a tuned
 complex channel today; the longer-term architecture is to create several
 independent receive slices from that same sampled input.
 
-![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.png)
+![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.jpg)
 
 The individual boards are also documented here: [SmartZynq SP2](docs/images/smartzynq-sp2.png) and [AD9248 ADC board](docs/images/ad9248-board.png).
 
