@@ -21,7 +21,7 @@ independent receive slices from that same sampled input.
 
 The whole hardware project is heree: The individual boards are also documented here: https://hackaday.io/project/206722-0-64mhz-multichannel-rx-with-two-commercial-boards.
 
-| Project | Purpose |
+| Vivado Project | Purpose |
 | --- | --- |
 | [`board_test`](vivado/projects/board_test/) | Minimal vendor-compatible board and Xillinux test. |
 | [`adc_simulator`](vivado/projects/adc_simulator/) | Simulated or external AD9248 capture path. |
