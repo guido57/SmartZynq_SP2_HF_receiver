@@ -1,0 +1,56 @@
+<h1>FT8 decoding from the FPGA's simulated audio stream</h1>
+
+<p>The receiver can now decode an FT8 transmission generated entirely inside the SmartZynq FPGA. This provides a repeatable test of the complete path from the programmable tone generator, through the DDC and USB/LSB demodulator, into the Xillybus audio stream and the Cortex-A9 decoder.</p>
+
+<p>The PS uploads a 79-symbol FT8 frame to the FPGA through <code>/dev/xillybus_mem_8</code>. The default frame is a valid FT8 transmission:</p>
+
+<pre><code>G0XYZ K1ABC FN43</code></pre>
+
+<p>The FPGA emits the frame as a 1 kHz audio signal. USB audio is sent as 8 kHz, 16-bit little-endian PCM over <code>/dev/xillybus_read_8</code>. The Xillybus endpoint transfers one byte at a time: low PCM byte followed by high PCM byte.</p>
+
+<h2>Setting up the simulated receiver</h2>
+
+<p>Set the receiver source, demodulator, DDC frequency, and simulated carrier once after boot or FPGA configuration:</p>
+
+<pre><code>python3 /root/receiver_control.py \
+  --source simulated \
+  --mode usb \
+  --tune 1000000 \
+  --sim-frequency 1001000</code></pre>
+
+<p>The 1 kHz difference between the simulated carrier and DDC tune becomes the FT8 audio frequency. Uploading the default tone vector starts or restarts the 15-second repeating FPGA transmission:</p>
+
+<pre><code>python3 /root/ft8_control.py</code></pre>
+
+<p><code>ft8_control.py</code> writes the packed 79 tones to the FPGA, verifies every byte, commits the new frame, and waits for the FPGA acknowledgement.</p>
+
+<h2>Slot timing matters</h2>
+
+<p>The live decoder opens <code>/dev/xillybus_read_8</code> at a UTC 15-second boundary and captures 120,000 PCM16 samples. The first seven FT8 symbols form a Costas synchronization block, so the generator must begin <em>inside</em> the captured slot. Starting it just before the boundary cuts off that first block and prevents synchronization.</p>
+
+<p>For this test, the tone upload was scheduled 0.75 seconds after the next UTC boundary while the stream decoder waited for the same boundary:</p>
+
+<pre><code>cd /root/ft8_decoder
+make stream
+
+(
+python3 - &lt;&lt;'PY'
+import subprocess, time
+target = (int(time.time()) // 15 + 1) * 15 + 0.75
+time.sleep(max(0.0, target - time.time()))
+subprocess.run(["python3", "/root/ft8_control.py"], check=True)
+PY
+) &amp;
+
+build/a9-stream/ft8-subtract-stream-a9 --slots 1 --base-mhz 1.001
+wait</code></pre>
+
+<p>The Cortex-A9 produced the expected decode:</p>
+
+<pre><code>snr=+20 dt=+1.14s freq=1000.0Hz text=G0XYZ K1ABC FN43</code></pre>
+
+<p>The stream runner uses the same three-pass residual-subtraction decoder as the WAV test program. It is built with an 80-candidate search limit, which also allows the receiver's 8 kHz test recording to recover all 27 known messages.</p>
+
+<h2>What this proves</h2>
+
+<p>This test validates the FPGA tone upload, simulated RF source, DDC, SSB audio path, PCM byte order, Xillybus transport, UTC-aligned capture, and native FT8 decoder as one chain. The generator is continuous-phase 8-FSK and does not yet apply FT8 Gaussian frequency shaping, so it is a deterministic integration test rather than a substitute for a weak-signal off-air test.</p>

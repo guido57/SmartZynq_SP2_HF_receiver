@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">SmartZynq simulated FT8 stream decode path</title>
+  <desc id="desc">The PS uploads FT8 tones to an FPGA generator, which passes through the DDC and USB demodulator to an 8 kHz PCM Xillybus stream decoded by the Cortex-A9.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#1f4c78"/></marker>
+    <style>
+      .bg { fill:#f7fafc; }
+      .box { stroke:#1f4c78; stroke-width:2; rx:12; ry:12; }
+      .ps { fill:#dceefe; }
+      .fpga { fill:#e0f2e5; }
+      .stream { fill:#fff1cc; }
+      .decode { fill:#f9dfdf; }
+      .arrow { fill:none; stroke:#1f4c78; stroke-width:3; marker-end:url(#arrow); }
+      .control { fill:none; stroke:#6b4f00; stroke-width:2.5; stroke-dasharray:8 6; marker-end:url(#arrow); }
+      .h { font:700 22px sans-serif; fill:#17324d; text-anchor:middle; }
+      .t { font:16px sans-serif; fill:#17324d; text-anchor:middle; }
+      .s { font:14px sans-serif; fill:#4b5e70; text-anchor:middle; }
+      .label { font:14px sans-serif; fill:#6b4f00; text-anchor:middle; }
+      .title { font:700 29px sans-serif; fill:#17324d; text-anchor:middle; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="600"/>
+  <text class="title" x="600" y="45">Simulated FT8 stream decode on SmartZynq</text>
+
+  <rect class="box ps" x="55" y="160" width="200" height="132"/>
+  <text class="h" x="155" y="195">PS control</text>
+  <text class="t" x="155" y="224">receiver_control.py</text>
+  <text class="t" x="155" y="250">ft8_control.py</text>
+  <text class="s" x="155" y="275">79 FT8 tones</text>
+
+  <rect class="box fpga" x="345" y="125" width="220" height="200"/>
+  <text class="h" x="455" y="160">FPGA</text>
+  <text class="t" x="455" y="193">FT8 tone generator</text>
+  <text class="s" x="455" y="218">1.001 MHz simulated RF</text>
+  <line x1="380" y1="238" x2="530" y2="238" stroke="#75a888" stroke-width="2"/>
+  <text class="t" x="455" y="268">DDC + USB demodulator</text>
+  <text class="s" x="455" y="294">1 kHz FT8 audio</text>
+
+  <rect class="box stream" x="655" y="160" width="200" height="132"/>
+  <text class="h" x="755" y="195">Xillybus</text>
+  <text class="t" x="755" y="224">/dev/xillybus_read_8</text>
+  <text class="s" x="755" y="250">8 kHz PCM16 LE</text>
+  <text class="s" x="755" y="275">byte stream</text>
+
+  <rect class="box decode" x="945" y="125" width="210" height="200"/>
+  <text class="h" x="1050" y="160">Cortex-A9</text>
+  <text class="t" x="1050" y="193">ft8-subtract-stream-a9</text>
+  <text class="s" x="1050" y="220">UTC slot capture</text>
+  <text class="s" x="1050" y="245">3-pass residual decode</text>
+  <line x1="978" y1="264" x2="1122" y2="264" stroke="#c48787" stroke-width="2"/>
+  <text class="t" x="1050" y="294">G0XYZ K1ABC FN43</text>
+
+  <path class="arrow" d="M255 226 H345"/>
+  <path class="arrow" d="M565 226 H655"/>
+  <path class="arrow" d="M855 226 H945"/>
+
+  <path class="control" d="M155 160 V95 H455 V125"/>
+  <text class="label" x="305" y="84">source=simulated, USB, tune=1.000 MHz</text>
+
+  <path class="control" d="M155 292 V390 H1050 V325"/>
+  <text class="label" x="605" y="420">Upload tones about 0.75 s after the UTC boundary; open stream at the boundary</text>
+
+  <text class="s" x="600" y="535">Validated live path: FPGA generator → DDC → PCM stream → native FT8 decode</text>
+</svg>

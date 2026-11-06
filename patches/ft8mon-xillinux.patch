@@ -1,0 +1,129 @@
+--- a/src/ft8.cc
++++ b/src/ft8.cc
+@@ -486,7 +486,7 @@
+ // strength of costas block of signal with tone 0 at bi0,
+ // and symbol zero at si0.
+ double
+-one_coarse_strength(const ffts_t &bins, int bi0, int si0)
++one_coarse_strength(const std::vector<std::vector<float>> &bins, int bi0, int si0)
+ {
+   int costas[] = { 3, 1, 4, 0, 6, 5, 2 };
+ 
+@@ -502,7 +502,7 @@
+       int mxi = -1;
+       double sum = 0;
+       for(int i = 0; i < 8; i++){
+-        double x = std::abs(bins[si0+si][bi0+i]);
++        double x = bins[si0+si][bi0+i];
+         sum += x;
+         if(mxi < 0 || x > mx){
+           mxi = i;
+@@ -510,15 +510,15 @@
+         }
+       }
+       if(si >= 0 && si < 7){
+-        double x = std::abs(bins[si0+si][bi0+costas[si-0]]);
++        double x = bins[si0+si][bi0+costas[si-0]];
+         sig += x;
+         noise += sum - x;
+       } else if(si >= 36 && si < 36+7){
+-        double x = std::abs(bins[si0+si][bi0+costas[si-36]]);
++        double x = bins[si0+si][bi0+costas[si-36]];
+         sig += x;
+         noise += sum - x;
+       } else if(si >= 72 && si < 72+7){
+-        double x = std::abs(bins[si0+si][bi0+costas[si-72]]);
++        double x = bins[si0+si][bi0+costas[si-72]];
+         sig += x;
+         noise += sum - x;
+       } else {
+@@ -532,9 +532,9 @@
+     for(int si = 0; si < 7; si++){
+       for(int bi = 0; bi < 8; bi++){
+         double x = 0;
+-        x += std::abs(bins[si0+si][bi0+bi]);
+-        x += std::abs(bins[si0+36+si][bi0+bi]);
+-        x += std::abs(bins[si0+72+si][bi0+bi]);
++        x += bins[si0+si][bi0+bi];
++        x += bins[si0+36+si][bi0+bi];
++        x += bins[si0+72+si][bi0+bi];
+         if(bi == costas[si]){
+           sig += x;
+         } else {
+@@ -591,6 +591,13 @@
+ std::vector<Strength>
+ coarse(const ffts_t &bins, int si0, int si1)
+ {
++  // Magnitudes are reused across frequency and timing hypotheses.
++  std::vector<std::vector<float>> magnitudes(bins.size());
++  for(size_t t=0; t<bins.size(); ++t) {
++    magnitudes[t].resize(bins[t].size());
++    for(size_t f=0; f<bins[t].size(); ++f)
++      magnitudes[t][f] = std::abs(bins[t][f]);
++  }
+   int block = blocksize(rate_);
+   int nbins = bins[0].size();
+   double bin_hz = rate_ / (double) block;
+@@ -602,7 +609,7 @@
+   for(int bi = min_bin; bi < max_bin && bi+8 <= nbins; bi++){
+     std::vector<Strength> sv;
+     for(int si = si0; si < si1 && si + 79 < (int) bins.size(); si++){
+-      double s = one_coarse_strength(bins, bi, si);
++      double s = one_coarse_strength(magnitudes, bi, si);
+       Strength st;
+       st.strength_ = s;
+       st.hz_ = bi * 6.25;
+@@ -894,6 +901,7 @@
+     }
+     double deadline = now() + remaining;
+     
++    double pass_start = now();
+     int new_decodes = 0;
+     // samples_ = nsamples_;
+ 
+@@ -958,6 +966,7 @@
+     
+     // printf("go: sorted %d candidates between strength %.2f and %.2f, PSRAM free=%d\n",
+     //         (int) order.size(), order.begin()->strength_, order.end()->strength_, heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
++    fprintf(stderr, "Pass %d: coarse search %.3fs, %zu candidates\n", pass_+1, now()-pass_start, order.size());
+     char already[2000]; // XXX
+     for(int i = 0; i < (int)(sizeof(already)/sizeof(already[0])); i++)
+       already[i] = 0;
+@@ -3295,7 +3304,7 @@
+   // }
+ 
+   // std::vector<double> samples(nsamples);
+-  std::vector<float> samples(192000);
++  std::vector<float> samples(nsamples);
+   for(int i = 0; i < nsamples; i++){
+     samples[i] = xsamples[i];
+   }
+--- a/src/ft8mon.cc
++++ b/src/ft8mon.cc
+@@ -199,6 +199,15 @@
+ void run_decoder(const std::vector<int16_t> &s16, int rate) {
+   int hints[2] = { 2, 0 }; // CQ
+   double budget = 5;
++  if(const char *value = std::getenv("FT8MON_BUDGET")) budget = std::atof(value);
++  double min_hz = 150, max_hz = 3600;
++  if(const char *value = std::getenv("FT8MON_MIN_HZ")) min_hz = std::atof(value);
++  if(const char *value = std::getenv("FT8MON_MAX_HZ")) max_hz = std::atof(value);
++  if(!(budget > 0 && budget <= 3600 && min_hz >= 0 && max_hz > min_hz && max_hz <= rate/2-50)) {
++    fprintf(stderr, "Invalid FT8MON budget or frequency range\n");
++    exit(1);
++  }
++  fprintf(stderr, "Decoder budget: %.1f seconds\n", budget);
+ 
+   extern int nthreads;
+   nthreads = 1;
+@@ -218,8 +227,8 @@
+   }
+   
+   entry(s.data(), s.size(), 0.5 * rate, rate,
+-        150,
+-        3600, 
++        min_hz,
++        max_hz,
+         hints, hints, budget, budget, hcb
+       //  0, (struct cdecode *) 0
+       );

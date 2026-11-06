@@ -10,6 +10,10 @@ DISPLAY=:0 python3 /root/adc_monitor.py --receiver --source simulated --mode iq
 
 Continuous audio can be recorded with `capture_ssb_audio.py` or streamed to a PC with `ssh -T ... 'cat /dev/xillybus_read_8' | aplay -t raw -f S16_LE -c 1 -r 8000`.
 
+For native decoder builds on the ARM PS, see
+[ESP32 FT8 decoder on the Cortex-A9](esp32-ft8-a9.md). The earlier
+[FT8MON evaluation](ft8mon.md) is retained for comparison.
+
 ## FT8 simulator
 
 `ft8_control.py` uploads an arbitrary 79-tone FT8 sequence. Each tone is an integer from 0 to 7. The default sequence is the supplied K1ABC vector.

@@ -31,10 +31,15 @@ Each project has its own `create_project.tcl`, `open_block_design.tcl`, and `bui
 
 ## Receiver architecture
 
-The present implementation is one receiver channel; it is the practical
-foundation for the future multi-channel receiver. The FPGA handles the
+The present implementation is one receiver channel; the production target is
+at least four simultaneous receiver slices and four independent FT8 decoders.
+The FPGA handles the
 high-rate conversion work, while Xillinux configures the receiver, presents
 the local monitor, and provides audio/IQ data over Ethernet.
+
+## Project logs
+
+- [Decoding the FPGA's simulated FT8 stream](docs/hackaday-ft8-simulated-stream.md)
 
 ![Receiver signal path](docs/images/block-diagram.png)
 
