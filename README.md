@@ -19,7 +19,7 @@ independent receive slices from that same sampled input.
 
 ![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.jpg)
 
-The whole hardware project is heree: The individual boards are also documented here: https://hackaday.io/project/206722-0-64mhz-multichannel-rx-with-two-commercial-boards.
+The individual boards and their assembly are documented here: https://hackaday.io/project/206722-0-64mhz-multichannel-rx-with-two-commercial-boards.
 
 | Vivado Project | Purpose |
 | --- | --- |
