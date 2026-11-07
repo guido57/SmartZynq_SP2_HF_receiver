@@ -6,7 +6,7 @@ Use a full Vivado `.bit` file for JTAG. The SmartZynq's U-Boot 2013.07 cannot pa
 python3 scripts/shorten_bit_header.py INPUT.bit OUTPUT-legacy.bit
 ```
 
-For normal SD deployment use the PC-side installer. It backs up the installed image, creates a boot-compatible copy if necessary, verifies hashes, replaces only `/boot/xillydemo.bit`, and leaves the board running until you reboot it.
+For normal SD deployment use the PC-side installer. It backs up the installed image, creates a boot-compatible copy if necessary, verifies hashes, replaces only `xillydemo.bit` on the SD boot partition (mounted at `/mnt/sdboot` by the helper), and leaves the board running until you reboot it.
 
 ```bash
 python3 scripts/deploy_sd.py 192.168.1.126 build/hf_ssb_receiver-legacy.bit
@@ -16,3 +16,6 @@ ssh root@192.168.1.126 reboot
 The installer stores the original image and manifest under `~/SmartZynq-backups/` on the PC. Do not place a second full bitstream or a desktop Trash directory on the small FAT boot partition.
 
 For temporary JTAG programming, select the unshortened `.bit` in Vivado Hardware Manager. Use the lifecycle procedure in [JTAG reconfiguration](jtag-reconfiguration.md) when Linux is already running.
+
+After reboot, follow [PL–PS validation](https://github.com/guido57/sz_hf_rx/blob/main/docs/hardware_validation.md)
+and the [internal FT8 test](https://github.com/guido57/sz_hf_rx/blob/main/docs/integration_tests.md) in the software repository.

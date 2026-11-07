@@ -1,3 +1,5 @@
+> Historical experiment record. For current software builds and executable test steps, see [sz_hf_rx](https://github.com/guido57/sz_hf_rx) and its [integration tests](https://github.com/guido57/sz_hf_rx/blob/main/docs/integration_tests.md). Older paths and timing examples below describe the original experiment.
+
 # FT8 decoding from the FPGA's simulated audio stream
 
 The receiver can now decode an FT8 transmission generated entirely inside the
