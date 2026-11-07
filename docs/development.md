@@ -11,3 +11,11 @@ and SSB engines were separately evaluated for eight tagged channels, but a
 four-DDC board image and four simultaneous decoder streams have not been built.
 
 Relevant simulations are in `sim/`, including `tb_ft8_ps_tones.sv` and `tb_ft8_ps_upload.sv`. Filter and SSB coefficient generators are in `scripts/`. Historical resource estimates and intermediate DDC work are preserved in `archive/docs/`.
+
+## Test ownership
+
+[tests/](../tests/README.md) contains the mocked PC-side SD deployment tests.
+Receiver controls, monitor, audio capture and JTAG lifecycle tests live in
+[sz_hf_rx/tests](https://github.com/guido57/sz_hf_rx/tree/main/tests).
+RTL simulation stays here; real-board PL–PS checks are documented in the
+[software validation guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/hardware_validation.md).

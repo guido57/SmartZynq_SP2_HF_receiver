@@ -9,4 +9,5 @@ build/
 nlviewcommon.logfile
 vivado/projects/*/project/
 archive/vivado_intermediate/
-scripts/__pycache__/
+__pycache__/
+*.py[cod]

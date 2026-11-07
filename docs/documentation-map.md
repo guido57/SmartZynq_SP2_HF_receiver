@@ -6,6 +6,8 @@
 | Bitstream generation, SD deployment and Vivado JTAG programming | [Deployment](deployment.md), [JTAG](jtag-reconfiguration.md) |
 | Device endpoints, registers, sample formats and rates | [PS–PL interface](ps_pl_interface.md) |
 | Xillinux tools, decoder builds and receiver operation | [sz_hf_rx](https://github.com/guido57/sz_hf_rx) |
+| Mocked receiver, monitor, audio and JTAG software tests | [sz_hf_rx/tests](https://github.com/guido57/sz_hf_rx/tree/main/tests) |
+| PC-side SD deployment tests | [tests/](../tests/README.md) |
 | Preliminary hardware/software transport validation | [hardware_validation.md](https://github.com/guido57/sz_hf_rx/blob/main/docs/hardware_validation.md) |
 | Full simulated FT8 signal path and expected results | [integration_tests.md](https://github.com/guido57/sz_hf_rx/blob/main/docs/integration_tests.md) |
 
