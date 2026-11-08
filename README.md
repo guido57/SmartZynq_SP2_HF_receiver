@@ -67,6 +67,20 @@ Python receiver utilities and decoder sources live in `sz_hf_rx`; this
 repository contains PL designs, Vivado tools and PC-side deployment helpers.
 Do not copy receiver scripts from this repository: they have moved.
 
+## Ready-to-run receiver SD image
+
+[Download boot-tested v3 (2026-11-08)](https://github.com/guido57/SmartZynq_SP2_HF_receiver/releases/tag/sd-image-v3-2026-11-08).
+HDMI/LXDE, SSH and VNC start automatically. SSH login is **root/root**;
+VNC password is **root**, port **5900**. Flash a spare SD card, then run
+`sz-hf-rx` or open **SmartZynq FT8 Demo**. The owner confirmed this image works
+as requested on the board. See the [first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md).
+
+
+The [image composition guide](docs/sd-image.md) packages the clean Xillinux base,
+tested PL boot files and prebuilt software. On the resulting card, run
+`sz-hf-rx` or open **SmartZynq FT8 Demo**. Software setup and first-use details
+are maintained in [sz_hf_rx](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md).
+
 ## Documentation
 
 - [PS–PL interface specification](docs/ps_pl_interface.md)
