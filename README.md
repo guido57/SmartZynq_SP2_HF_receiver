@@ -48,7 +48,7 @@ For the simple internal FT8 demonstration:
 sz-hf-rx
 ```
 
-or log in via VNC and dbl-click on "demo".
+or log in via VNC and dbl-click on "SmartZynq FT8 Demo".
 You'll see something like this:
 
 ![ReadyToRun-sd-result](docs/images/ReadyToRun-sd-result.png)
