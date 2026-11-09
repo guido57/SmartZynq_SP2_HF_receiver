@@ -1,6 +1,12 @@
 # SmartZynq SP2 HF receiver
 
-This repository contains three independent Vivado projects for the HelloFPGA SmartZynq SP2 V1.3B (XC7Z020) running Xillinux 2.0. They retain the vendor Xillinux platform: HDMI display, Ethernet, SSH and Xillybus continue to be provided by the original PS/PL design.
+## Overview
+
+This repository contains the programmable-logic designs for an HF receiver on the HelloFPGA SmartZynq SP2 V1.3B.
+It retains the vendor Xillinux platform, including HDMI, Ethernet, SSH and Xillybus.
+The companion [sz_hf_rx](https://github.com/guido57/sz_hf_rx) repository provides the A9 FT8 decoder and Linux utilities.
+The supported designs cover a vendor-compatible board test, ADC capture, and the HF SSB receiver.
+The ready-to-run SD image combines the tested PL boot files with the receiver software for an immediate demonstration.
 
 ## Hardware
 
@@ -21,65 +27,38 @@ independent receive slices from that same sampled input.
 
 The individual boards and their assembly are documented here: https://hackaday.io/project/206722-0-64mhz-multichannel-rx-with-two-commercial-boards.
 
+## Receiver architecture
+
+The present implementation is one receiver channel but the production target is
+at least four simultaneous receiver slices and four independent FT8 decoders.
+
+The FPGA handles the high-rate conversion work, while Xillinux configures the receiver, presents the local monitor, and provides audio/IQ data over Ethernet.
+
+![Receiver signal path](docs/images/block-diagram.png)
+
+## Ready-to-run receiver SD image
+
+[Download boot-tested v3 (2026-11-08)](https://github.com/guido57/SmartZynq_SP2_HF_receiver/releases/tag/sd-image-v3-2026-11-08), verify its SHA-256 checksum, and flash the `.img.gz` to a spare SD card as described in the [first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md). Insert the card in the SmartZynq and power it on; HDMI/LXDE, SSH and VNC start automatically.
+
+Find the board IP address from the router or the HDMI desktop. Connect with either `ssh root@BOARD_IP` (password `root`) or a VNC client to `BOARD_IP:5900` (password `root`). The image includes the receiver software and a desktop launcher named **SmartZynq FT8 Demo**.
+
+For the simple internal FT8 demonstration, log in and run:
+
+```bash
+sz-hf-rx
+```
+
+It configures the FPGA's internal FT8 source, uploads the test frame, aligns it to a 15-second FT8 slot, captures the stream, and runs the decoder. The expected message is `G0XYZ K1ABC FN43`. See the [image composition guide](docs/sd-image.md) to build or customize an image, and the [software first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md) for operating details.
+
+## Vivado projects
+
 | Vivado Project | Purpose |
-| --- | --- |
+| :--- | :--- |
 | [`board_test`](vivado/projects/board_test/) | Minimal vendor-compatible board and Xillinux test. |
 | [`adc_simulator`](vivado/projects/adc_simulator/) | Simulated or external AD9248 capture path. |
 | [`hf_ssb_receiver`](vivado/projects/hf_ssb_receiver/) | 64 MS/s DDC, sharp channel filter, USB/LSB demodulation, PCM audio and PS-controlled FT8 simulator. |
 
 Each project has its own `create_project.tcl`, `open_block_design.tcl`, and `build.tcl`. Generated Vivado projects live below that project's `project/` directory and are ignored by Git.
-
-## Receiver architecture
-
-The present implementation is one receiver channel; the production target is
-at least four simultaneous receiver slices and four independent FT8 decoders.
-The FPGA handles the
-high-rate conversion work, while Xillinux configures the receiver, presents
-the local monitor, and provides audio/IQ data over Ethernet.
-
-## Project logs
-
-- [Decoding the FPGA's simulated FT8 stream](docs/hackaday-ft8-simulated-stream.md)
-
-![Receiver signal path](docs/images/block-diagram.png)
-
-![Future multi-channel monitoring concept](docs/images/multichannel-monitoring.png)
-
-## HF receiver quick start
-
-```bash
-source /tools/AMDDesignTools2026.1/2026.1/Vivado/settings64.sh
-vivado -mode batch -source vivado/projects/hf_ssb_receiver/build.tcl
-python3 scripts/shorten_bit_header.py \
-  vivado/projects/hf_ssb_receiver/project/verilog/vivado/xillydemo.runs/impl_1/xillydemo.bit \
-  build/hf_ssb_receiver-legacy.bit
-python3 scripts/deploy_sd.py 192.168.1.126 build/hf_ssb_receiver-legacy.bit
-ssh root@192.168.1.126 reboot
-```
-
-After programming and rebooting, continue in the software repository:
-
-- [Preliminary PL–PS validation](https://github.com/guido57/sz_hf_rx/blob/main/docs/hardware_validation.md)
-- [Internal FT8 integration test](https://github.com/guido57/sz_hf_rx/blob/main/docs/integration_tests.md)
-- [Receiver operation](https://github.com/guido57/sz_hf_rx/blob/main/docs/receiver.md)
-
-Python receiver utilities and decoder sources live in `sz_hf_rx`; this
-repository contains PL designs, Vivado tools and PC-side deployment helpers.
-Do not copy receiver scripts from this repository: they have moved.
-
-## Ready-to-run receiver SD image
-
-[Download boot-tested v3 (2026-11-08)](https://github.com/guido57/SmartZynq_SP2_HF_receiver/releases/tag/sd-image-v3-2026-11-08).
-HDMI/LXDE, SSH and VNC start automatically. SSH login is **root/root**;
-VNC password is **root**, port **5900**. Flash a spare SD card, then run
-`sz-hf-rx` or open **SmartZynq FT8 Demo**. The owner confirmed this image works
-as requested on the board. See the [first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md).
-
-
-The [image composition guide](docs/sd-image.md) packages the clean Xillinux base,
-tested PL boot files and prebuilt software. On the resulting card, run
-`sz-hf-rx` or open **SmartZynq FT8 Demo**. Software setup and first-use details
-are maintained in [sz_hf_rx](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md).
 
 ## Documentation
 
