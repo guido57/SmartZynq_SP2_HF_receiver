@@ -23,7 +23,7 @@ Notes:
 
 ![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.jpg)
 
-The individual boards and their assembly are documented here: https://hackaday.io/project/206722-0-64mhz-multichannel-rx-with-two-commercial-boards.
+The individual boards and their assembly are documented here: https://hackaday.io/project/206722-hf-receiver-on-adc-and-fpga.
 
 ## Receiver architecture
 
