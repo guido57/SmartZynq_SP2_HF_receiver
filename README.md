@@ -2,11 +2,12 @@
 
 ## Overview
 
-This repository contains the programmable-logic designs for an HF receiver on the HelloFPGA SmartZynq SP2 V1.3B.
+- This repository contains the programmable-logic designs for an HF receiver on the HelloFPGA SmartZynq SP2 V1.3B.
 It retains the vendor Xillinux platform, including HDMI, Ethernet, SSH and Xillybus.
-The companion [sz_hf_rx](https://github.com/guido57/sz_hf_rx) repository provides the A9 FT8 decoder and Linux utilities.
-The supported designs cover a vendor-compatible board test, ADC capture, and the HF SSB receiver.
-The ready-to-run SD image combines the tested PL boot files with the receiver software for an immediate demonstration.
+- The supported designs cover a vendor-compatible board test, ADC capture, and the HF SSB receiver.
+- The ready-to-run SD image combines the tested PL boot files with the receiver software for an immediate demonstration.
+- The companion [sz_hf_rx](https://github.com/guido57/sz_hf_rx) repository provides the A9 FT8 decoder and Linux utilities.
+
 
 ## Hardware
 
@@ -48,7 +49,11 @@ For the simple internal FT8 demonstration, log in and run:
 sz-hf-rx
 ```
 
-It configures the FPGA's internal FT8 source, uploads the test frame, aligns it to a 15-second FT8 slot, captures the stream, and runs the decoder. The expected message is `G0XYZ K1ABC FN43`. See the [image composition guide](docs/sd-image.md) to build or customize an image, and the [software first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md) for operating details.
+It configures the FPGA's internal FT8 source, uploads the test frame, aligns it to a 15-second FT8 slot, captures the stream, and runs the decoder. The expected message is `G0XYZ K1ABC FN43`. 
+
+Just in case you want to build or customize an image, for operating details see:
+- [image composition guide](docs/sd-image.md)  
+- [software first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md) 
 
 ## Vivado projects
 
