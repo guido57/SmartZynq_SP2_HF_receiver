@@ -40,11 +40,19 @@ The FPGA handles the high-rate conversion work, while Xillinux configures the re
 
 Find the board IP address from the router or the HDMI desktop. Connect with either `ssh root@BOARD_IP` (password `root`) or a VNC client to `BOARD_IP:5900` (password `root`). The image includes the receiver software and a desktop launcher named **SmartZynq FT8 Demo**.
 
-For the simple internal FT8 demonstration, log in and run:
+For the simple internal FT8 demonstration:
+
+- log in via ssh and run:
 
 ```bash
 sz-hf-rx
 ```
+
+or log in via VNC and dbl-click on "demo".
+You'll see something like this:
+
+![ReadyToRun-sd-result](docs/images/ReadyToRun-sd-result.png)
+
 
 It configures the FPGA's internal FT8 source, uploads the test frame, aligns it to a 15-second FT8 slot, captures the stream, and runs the decoder. The expected message is `G0XYZ K1ABC FN43`. 
 
