@@ -11,18 +11,15 @@ It retains the vendor Xillinux platform, including HDMI, Ethernet, SSH and Xilly
 
 ## Hardware
 
-The receiver uses two readily available boards: a HelloFPGA **SmartZynq SP2**
-and an **AD9248-65** dual 14-bit ADC board. The ADC board is the acquisition
-front end; the SmartZynq provides the FPGA DSP, Linux control plane, HDMI
-display and Ethernet connection. The FPGA generates the 64 MHz sampling clock
-and receives the ADC's parallel CMOS data through J6. The current receiver
-uses channel A; the second converter channel remains available for later work.
+The receiver uses two readily available boards: 
+- a HelloFPGA **SmartZynq SP2** for FPGA DSP, Linux control plane, HDMI display and Ethernet connection
+- and an **AD9248-65** dual 14-bit ADC board, which is the acquisition front end
 
-The ADC board is not a complete HF front end by itself. A real antenna input
-still needs suitable protection, gain or attenuation, band selection and
-anti-alias filtering. The PL turns one digitized RF or IF stream into a tuned
-complex channel today; the longer-term architecture is to create several
-independent receive slices from that same sampled input.
+The FPGA generates the 64 MHz sampling clock and receives the ADC's parallel CMOS data through J6. It turns one digitized RF or IF stream into a tuned complex channel today; the longer-term architecture is to create several independent receive slices from that same sampled input.
+
+Notes:
+- The current receiver uses ADC channel A only; its B channel remains available for later work.
+- The ADC board is not a complete HF front end by itself, it optionally needs: a suitable input protection, gain or attenuation and anti-alias filtering.
 
 ![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.jpg)
 
