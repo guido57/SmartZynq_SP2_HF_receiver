@@ -29,6 +29,8 @@ The individual boards and their assembly are documented here: https://hackaday.i
 
 ## Ready-to-run receiver SD image
 
+The best way to start is to test the ready SD image. It's not only a demo, but it's also the starting point for understanding how the whole thing works and for further implementations.
+
 [Download boot-tested v3 (2026-11-08)](https://github.com/guido57/SmartZynq_SP2_HF_receiver/releases/tag/sd-image-v3-2026-11-08), verify its SHA-256 checksum, and flash the `.img.gz` to a spare SD card as described in the [first-use guide](https://github.com/guido57/sz_hf_rx/blob/main/docs/sd_image.md). Insert the card in the SmartZynq and power it on; HDMI/LXDE, SSH and VNC start automatically.
 
 Find the board IP address from the router or the HDMI desktop. Connect with either `ssh root@BOARD_IP` (password `root`) or a VNC client to `BOARD_IP:5900` (password `root`). The image includes the receiver software and a desktop launcher named **SmartZynq FT8 Demo**.
