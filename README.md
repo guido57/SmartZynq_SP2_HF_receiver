@@ -17,6 +17,8 @@ The receiver uses two readily available boards:
 
 The FPGA generates the 64 MHz sampling clock and receives the ADC's parallel CMOS data through J6. It turns one digitized RF or IF stream into a tuned complex channel today; the longer-term architecture is to create several independent receive slices from that same sampled input.
 
+![Receiver signal path](docs/images/block-diagram.png)
+
 Notes:
 - The current receiver uses ADC channel A only; its B channel remains available for later work.
 - The ADC board is not a complete HF front end by itself, it optionally needs: a suitable input protection, gain or attenuation and anti-alias filtering.
@@ -24,15 +26,6 @@ Notes:
 ![SmartZynq SP2 and AD9248 acquisition board](docs/images/the_two_boards.jpg)
 
 The individual boards and their assembly are documented here: https://hackaday.io/project/206722-hf-receiver-on-adc-and-fpga.
-
-## Receiver architecture
-
-The present implementation is one receiver channel but the production target is
-at least four simultaneous receiver slices and four independent FT8 decoders.
-
-The FPGA handles the high-rate conversion work, while Xillinux configures the receiver, presents the local monitor, and provides audio/IQ data over Ethernet.
-
-![Receiver signal path](docs/images/block-diagram.png)
 
 ## Ready-to-run receiver SD image
 
